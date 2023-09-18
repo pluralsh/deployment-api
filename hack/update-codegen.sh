@@ -5,7 +5,7 @@ set -o nounset
 set -o pipefail
 
 # corresponding to go mod init <module>
-MODULE=github.com/pluralsh/database-interface-api
+MODULE=github.com/pluralsh/deployment-api
 # api package
 APIS_PKG=api
 # generated output package

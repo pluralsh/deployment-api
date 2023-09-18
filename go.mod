@@ -1,4 +1,4 @@
-module github.com/pluralsh/database-interface-api
+module github.com/pluralsh/deployment-api
 
 go 1.18
 
