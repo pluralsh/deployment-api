@@ -67,11 +67,7 @@ service Provisioner {
     // If the deployment has already been deleted, then no error should be returned.
     rpc DriverDeleteDeployment (DriverDeleteDeploymentRequest) returns (DriverDeleteDeploymentResponse) {}
 
-    // This call grants access to an account. The account_name in the request shall be used as a unique identifier to create credentials.
-    // The account_id returned in the response will be used as the unique identifier for deleting this access when calling DriverRevokeDeploymentAccess.
-    rpc DriverGrantDeploymentAccess (DriverGrantDeploymentAccessRequest) returns (DriverGrantDeploymentAccessResponse);
-    // This call revokes all access to a particular deployment from a principal.
-    rpc DriverRevokeDeploymentAccess (DriverRevokeDeploymentAccessRequest) returns (DriverRevokeDeploymentAccessResponse);
+    rpc DriverGetDeploymentStatus (DriverGetDeploymentStatusRequest) returns (DriverGetDeploymentStatusResponse) {}
 }
 
 // S3SignatureVersion is the version of the signing algorithm for all s3 requests
@@ -103,32 +99,11 @@ enum AuthenticationType {
     IAM = 2;
 }
 
-message S3 {
-    // region denotes the geographical region where the S3 server is running
-    string region = 1;
-    // signature_version denotes the signature version for signing all s3 requests
-    S3SignatureVersion signature_version = 2;
-}
-
-message AzureBlob {
-    // storage_account is the id of the azure storage account
-    string storage_account = 1;
-}
-
-message GCS {
-    // private_key_name denotes the name of the private key in the storage backend
-    string private_key_name = 1;
-    // project_id denotes the name of the project id in the storage backend
-    string project_id = 2;
-    // service_account denotes the name of the service account in the storage backend
-    string service_account = 3;
-}
-
-message Protocol {
+message DeploymentStatusEnum {
     oneof type {
-        S3 s3 = 1;
-        AzureBlob azureBlob = 2;
-        GCS gcs = 3;
+        bool ready = 1;
+        bool pending = 2;
+        bool error = 3;
     }
 }
 
@@ -168,31 +143,6 @@ message DriverCreateDeploymentResponse {
     // deployment_id returned here is expected to be the globally unique 
     // identifier for the deployment in the object storage provider.
     string deployment_id = 1;
-
-    // deployment_info returned here stores the data specific to the
-    // deployment required by the object storage provider to connect to the deployment.
-    Protocol deployment_info = 2;
-}
-
-message DriverUpdateDeploymentRequest {
-    // This field is REQUIRED
-    // name specifies the name of the deployment that should be created.
-    string name = 1;
-
-    // This field is OPTIONAL
-    // The caller should treat the values in parameters as opaque.
-    // The receiver is responsible for parsing and validating the values.
-    map<string,string> parameters = 2;
-}
-
-message DriverUpdateDeploymentResponse {
-    // deployment_id returned here is expected to be the globally unique
-    // identifier for the deployment in the object storage provider.
-    string deployment_id = 1;
-
-    // deployment_info returned here stores the data specific to the
-    // deployment required by the object storage provider to connect to the deployment.
-    Protocol deployment_info = 2;
 }
 
 message DriverDeleteDeploymentRequest {
@@ -202,53 +152,22 @@ message DriverDeleteDeploymentRequest {
     string deployment_id = 1;
 }
 
+message DriverGetDeploymentStatusRequest {
+    // This field is REQUIRED
+    // deployment_id is a globally unique identifier for the deployment
+    // in the object storage provider
+    string deployment_id = 1;
+}
+
+message DriverGetDeploymentStatusResponse {
+    // deployment_id returned here is expected to be the globally unique
+    // identifier for the deployment in the object storage provider.
+    string deployment_id = 1;
+
+    DeploymentStatusEnum deployment_status = 2;
+    string message = 3;
+}
+
 message DriverDeleteDeploymentResponse {
-    // Intentionally left blank
-}
-
-message DriverGrantDeploymentAccessRequest {
-    // This field is REQUIRED
-    // deployment_id is a globally unique identifier for the deployment
-    // in the object storage provider 
-    string deployment_id = 1;
-
-    // This field is REQUIRED
-    // name field is used to define the name of the deployment access object.
-    string name = 2;
-
-    // This field is REQUIRED
-    // Requested authentication type for the deployment access.
-    // Supported authentication types are KEY or IAM.
-    AuthenticationType authentication_type = 3;
-
-    // This field is OPTIONAL
-    // The caller should treat the values in parameters as opaque. 
-    // The receiver is responsible for parsing and validating the values.
-    map<string,string> parameters = 4;
-}
-
-message DriverGrantDeploymentAccessResponse {
-    // This field is REQUIRED
-    // This is the account_id that is being provided access. This will
-    // be required later to revoke access. 
-    string account_id = 1;
-
-    // This field is REQUIRED
-    // Credentials supplied for accessing the deployment ex: aws access key id and secret, etc.
-    map<string, CredentialDetails> credentials = 2;
-}
-
-message DriverRevokeDeploymentAccessRequest {
-    // This field is REQUIRED
-    // deployment_id is a globally unique identifier for the deployment
-    // in the object storage provider.
-    string deployment_id = 1;
-
-    // This field is REQUIRED
-    // This is the account_id that is having its access revoked.
-    string account_id = 2;
-}
-
-message DriverRevokeDeploymentAccessResponse {
     // Intentionally left blank
 }

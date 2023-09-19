@@ -38,10 +38,13 @@ type DeploymentSpec struct {
 	PluralId string `json:"pluralId"`
 
 	// RepoUrl is a URL of repository to sync.
-	RevisionId string `json:"repoUrl"`
+	RepoUrl string `json:"repoUrl"`
 
 	// Subfolder from the repository to work with.
 	Subfolder string `json:"subfolder"`
+
+	// Ref shows desired ref.
+	Ref string `json:"ref"`
 
 	// Namespace to sync into.
 	Namespace string `json:"namespace"`

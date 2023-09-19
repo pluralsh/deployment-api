@@ -68,6 +68,9 @@ spec:
               pluralId:
                 description: PluralId is an ID of deployment from Plural.
                 type: string
+              ref:
+                description: Ref shows desired ref.
+                type: string
               repoUrl:
                 description: RepoUrl is a URL of repository to sync.
                 type: string
@@ -79,6 +82,7 @@ spec:
             - driverName
             - namespace
             - pluralId
+            - ref
             - repoUrl
             - subfolder
             type: object
