@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	crhelperTypes "github.com/pluralsh/controller-reconcile-helper/pkg/types"
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -50,13 +49,8 @@ type DeploymentSpec struct {
 	// DriverName is the name of driver associated with this deployment operator
 	DriverName string `json:"driverName"`
 
-	// Name of the DeploymentClass specified in the DeploymentRequest
+	// Name of the DeploymentClass
 	DeploymentClassName string `json:"deploymentClassName"`
-
-	// Name of the DeploymentRequest that resulted in the creation of this Deployment
-	// In case the Deployment object was created manually, then this should refer
-	// to the DeploymentRequest with which this Deployment should be bound
-	DeploymentRequest *corev1.ObjectReference `json:"deploymentRequest"`
 
 	// +optional
 	Parameters map[string]string `json:"parameters,omitempty"`

@@ -23,9 +23,6 @@ func init() {
 }
 
 type DeploymentAccessSpec struct {
-	// DeploymentRequestName is the name of the DeploymentRequest.
-	DeploymentRequestName string `json:"deploymentRequestName"`
-
 	// DeploymentAccessClassName is the name of the DeploymentAccessClass
 	DeploymentAccessClassName string `json:"deploymentAccessClassName"`
 

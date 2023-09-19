@@ -43,13 +43,9 @@ spec:
               deploymentAccessClassName:
                 description: DeploymentAccessClassName is the name of the DeploymentAccessClass
                 type: string
-              deploymentRequestName:
-                description: DeploymentRequestName is the name of the DeploymentRequest.
-                type: string
             required:
             - credentialsSecretName
             - deploymentAccessClassName
-            - deploymentRequestName
             type: object
           status:
             properties:

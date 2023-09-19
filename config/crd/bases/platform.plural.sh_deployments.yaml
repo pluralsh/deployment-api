@@ -39,9 +39,32 @@ spec:
             type: object
           spec:
             properties:
+              deletionPolicy:
+                default: Retain
+                description: 'DeletionPolicy is used to specify how to handle deletion.
+                  There are 2 possible values: - Retain: Indicates that the Deployment
+                  should not be deleted (default) - Delete: Indicates that the Deployment
+                  should be deleted'
+                type: string
+              deploymentClassName:
+                description: Name of the DeploymentClass
+                type: string
+              driverName:
+                description: DriverName is the name of driver associated with this
+                  deployment operator
+                type: string
+              existingDeploymentID:
+                description: ExistingDeploymentID is the unique id of the deployment.
+                  This field will be empty when the Deployment is dynamically provisioned
+                  by operator.
+                type: string
               namespace:
                 description: Namespace to sync into.
                 type: string
+              parameters:
+                additionalProperties:
+                  type: string
+                type: object
               pluralId:
                 description: PluralId is an ID of deployment from Plural.
                 type: string
@@ -52,6 +75,8 @@ spec:
                 description: Subfolder from the repository to work with.
                 type: string
             required:
+            - deploymentClassName
+            - driverName
             - namespace
             - pluralId
             - repoUrl
@@ -102,6 +127,9 @@ spec:
                   - type
                   type: object
                 type: array
+              databaseID:
+                description: DeploymentID is the unique id of the deployment.
+                type: string
               ready:
                 description: Ready is a boolean condition to reflect the successful
                   creation of a deployment.
