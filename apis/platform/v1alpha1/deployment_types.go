@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	crhelperTypes "github.com/pluralsh/controller-reconcile-helper/pkg/types"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -26,11 +27,11 @@ func init() {
 }
 
 const (
-	// DatabaseReadyCondition used when database is ready.
-	DatabaseReadyCondition crhelperTypes.ConditionType = "DatabaseReady"
+	// DeploymentReadyCondition used when deployment is ready.
+	DeploymentReadyCondition crhelperTypes.ConditionType = "DeploymentReady"
 
-	// FailedToCreateDatabaseReason used when grpc method for database creation failed.
-	FailedToCreateDatabaseReason = "FailedToCreateDatabase"
+	// FailedToCreateDeploymentReason used when grpc method for deployment creation failed.
+	FailedToCreateDeploymentReason = "FailedToCreateDeployment"
 )
 
 type DeploymentSpec struct {
@@ -45,6 +46,33 @@ type DeploymentSpec struct {
 
 	// Namespace to sync into.
 	Namespace string `json:"namespace"`
+
+	// DriverName is the name of driver associated with this deployment operator
+	DriverName string `json:"driverName"`
+
+	// Name of the DeploymentClass specified in the DeploymentRequest
+	DeploymentClassName string `json:"deploymentClassName"`
+
+	// Name of the DeploymentRequest that resulted in the creation of this Deployment
+	// In case the Deployment object was created manually, then this should refer
+	// to the DeploymentRequest with which this Deployment should be bound
+	DeploymentRequest *corev1.ObjectReference `json:"deploymentRequest"`
+
+	// +optional
+	Parameters map[string]string `json:"parameters,omitempty"`
+
+	// ExistingDeploymentID is the unique id of the deployment.
+	// This field will be empty when the Deployment is dynamically provisioned by operator.
+	// +optional
+	ExistingDeploymentID string `json:"existingDeploymentID,omitempty"`
+
+	// DeletionPolicy is used to specify how to handle deletion. There are 2 possible values:
+	//  - Retain: Indicates that the Deployment should not be deleted (default)
+	//  - Delete: Indicates that the Deployment should be deleted
+	//
+	// +optional
+	// +kubebuilder:default:=Retain
+	DeletionPolicy DeletionPolicy `json:"deletionPolicy"`
 }
 
 type DeploymentStatus struct {
