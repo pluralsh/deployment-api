@@ -84,6 +84,10 @@ type DeploymentStatus struct {
 	// Ready is a boolean condition to reflect the successful creation of a deployment.
 	Ready bool `json:"ready,omitempty"`
 
+	// DeploymentID is the unique id of the deployment.
+	// +optional
+	DeploymentID string `json:"databaseID,omitempty"`
+
 	// Conditions defines current state.
 	// +optional
 	Conditions crhelperTypes.Conditions `json:"conditions,omitempty"`
